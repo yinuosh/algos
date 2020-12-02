@@ -1,0 +1,266 @@
+﻿#include <iostream>
+#include "SortFactory.h"
+#include <stack>
+#include <map>
+#include <ctime>
+#include <vector>
+
+using namespace std;
+
+bool IsValidString(const char* str, int len);
+
+struct BNode {
+	int val;
+	BNode* lChild;
+	BNode* rChild;
+}; 
+
+BNode* lowestCommonAncestorTopDown(BNode *root, BNode *p, BNode *q) {
+	if (root == NULL)return NULL;
+	if (root == p || root == q)return root;
+
+	BNode* lAncestor = lowestCommonAncestorTopDown(root->lChild, p, q);
+	BNode* rAncestor = lowestCommonAncestorTopDown(root->rChild, p, q);
+	if (lAncestor && rAncestor) return root;
+	else if (NULL != lAncestor) return lAncestor;
+	else if (NULL != rAncestor) return rAncestor;
+	else {
+		return NULL;
+	}
+}
+
+BNode* ans;
+bool dfs(BNode* root, BNode* p, BNode* q) {
+	if (root == NULL)return false;
+	bool lDfs = dfs(root->lChild, p, q);
+	bool rDfs = dfs(root->rChild, p, q);
+
+	if ((lDfs && rDfs) ||
+		((root == p || root == q) && (lDfs || rDfs))) {
+		ans = root;
+	}
+
+	if (root == p || root == q || lDfs || rDfs) {
+		return true;
+	}
+	return false;
+}
+
+std::stack<int> A, B, C;
+std::map<char, int> hanoiMap;
+
+void PrintStack(std::stack<int> &a) {
+	std::stack<int> copy(a);
+	while (!copy.empty())
+	{
+		std::cout << copy.top() << ",";
+		copy.pop();
+	}
+	std::cout << std::endl;
+}
+
+void PrintHanoi() {
+	std::cout << "A:"; PrintStack(A); 
+	std::cout << "B:"; PrintStack(B);
+	std::cout << "C:"; PrintStack(C);
+	std::cout << "=====================" << std::endl;
+}
+
+
+/*
+Search with wildchars *, _, +
+char* source,
+char* pattern;
+
+if(sLen == 0){
+	if(sP == 0)return true;
+	else{
+		p[0] == "*" || "*+"
+	}
+}
+
+loop(i:source)
+1. source[i] == pattern[0] or pattern[0] = '_' 
+	if next not '+': return match(source[i+1], pattern[1], len(pattern -1))
+	if next == '+': 
+		j = i+1；
+		while(s[j] == s[i])
+		{
+			j++;
+			return match(source[j], pattern[1], len(pattern -1))
+		}
+		
+2. pattern[0] == '*' && ( match(source[i+1], pattern[1], len(pattern) -1) || match(source[i], pattern[1], len of pattern - 1)
+3. pattern
+*/
+
+void Hanoi(char &a, char &b, char &c, int moveNum, std::map<char, int> &count) {
+
+	if (moveNum == 1) {
+		/*c.push(a.top());
+		a.pop();*/
+		//std::cout << a << " -> " << "c" << std::endl;
+		//count[a]--;
+		//count[c]++;
+	}
+	else {
+		Hanoi(a, c, b, moveNum - 1, count);
+		/*c.push(a.top());
+		a.pop();*/
+		//std::cout << a << " -> " << "c" << std::endl;
+		//count[a]--;
+		//count[c]++;
+		Hanoi(b, a, c, moveNum - 1, count);
+	}
+	//std::cout << "moveNum:" << moveNum  << ", A:" << count['A'] << ", B:" << count['B'] << ", C:" << count['C'] << std::endl;
+	//PrintHanoi();
+}
+
+// next is filled with 0
+void preKMP(const char* pattern, int len, std::vector<int> &next) {
+	next[0] = 0;
+	for (int i = 1; i < len; i++) {
+		int k = next[i - 1];
+		while (k >= 0)
+		{
+			if (pattern[i] == pattern[k])
+			{
+				next[i] = k + 1;
+				break;
+			}
+
+			
+			if (k > 0) {
+				k = next[k - 1];
+			}
+			else {
+				next[i] = 0;
+				break;
+			}
+		}
+	}
+}
+
+void KMP(const char* s, int sLen, const char* p, int pLen) {
+	std::vector<int> next(pLen, 0);
+	preKMP(p, pLen, next);
+	std::cout << "[";
+	for (int k : next)
+	{
+		std::cout << k << ",";
+	}
+	std::cout << "]" << std::endl;
+
+	int j = 0;
+	for (int i = 0; i < sLen; i++) {
+		if (s[i] == p[j]) {
+			j++;
+			if (j == pLen) {
+				std::cout << i - pLen + 1<< std::endl;
+				j = next[pLen - 1];
+			}
+		}
+		else {
+			i--;
+			if (j > 0) j = next[j - 1];
+		}
+
+	}
+}
+
+int main(int argc, char* argv[])
+{
+	std::cout << "Hello world!" << std::endl;
+	std::string s = "AABAACAADAABAABA";
+	std::string p = "AABA";
+	auto result  = SortFactory::SearchStringKMP(s.c_str(), s.size(), p.c_str(), p.size());
+	for (auto i : result) {
+		std::cout << i << std::endl;
+	}
+
+	string input = "Hi, this is Sky!";
+	char chars[] = "AABAACAADAABAABA";
+	SortFactory::LeftRotateString(chars, s.size(), 4);
+	std::cout << chars << std::endl;
+
+	char chars2[] = "Hi, this is Sky!";
+	SortFactory::ReverseWords(chars2);
+	std::cout << chars2 << std::endl;
+
+	char dStr[] = " d214748364999";
+	int d = SortFactory::StrToInt(dStr); 
+	cout << d << std::endl;
+
+	char s1[] = "abcde";
+	char p1[] = "cd";
+	bool m = SortFactory::MatchRecursive(s1, p1);
+	cout << m << std::endl;
+
+	while (true) {
+		cout << "s1:";
+		cin >> s1;
+		cout << "p1:";
+		cin >> p1;
+		SortFactory::MatchDP(s1, strlen(s1), p1, strlen(p1));
+		cout << "=========================" << endl;
+	}
+
+	//int iarr_a[] = {3, 5, 5, 45, 6, 654, 4, 1000,65, 65, 6456, 54, 5};
+	//Util::PrintIntArray(iarr_a, 13, "Bubble Before");
+	//SortFactory::BubbleSort(iarr_a, 13);
+	//Util::PrintIntArray(iarr_a, 13, "After");
+
+	//std::string testStr = "{}[](){()}{()}";
+	//std::cout << "IsValidString(" << testStr << ")" << std::endl;
+	//std::cout << IsValidString(testStr.c_str(), testStr.size()) << std::endl;
+
+	//int hanoiNum = 50;
+	//for (int i = hanoiNum; i >=1; i--) {
+	//	A.push(i);
+	//}
+
+	//clock_t t1;
+	//
+	////PrintHanoi();
+	//t1 = clock();
+	//char A = 'A', B = 'B', C = 'C';
+	//hanoiMap[A] = 64; 	hanoiMap[B] = 0; 	hanoiMap[C] = 0;
+	//Hanoi(A, B, C, hanoiMap[A], hanoiMap);
+	//t1 = clock() - t1;
+	//double time = (float)t1 / CLOCKS_PER_SEC;
+	//std::cout << "Time: " + std::to_string(time) + ", A:" << hanoiMap['A'] << ", B:" << hanoiMap['B'] << ", C:" << hanoiMap['C'] << std::endl;
+}
+
+bool IsValidString(const char* str, int len) {
+	std::stack<char> s;
+	char leftChars[] = {'(', '{', '['};
+	char rightChars[] = {')', '}', ']'};
+	int i = 0;
+	while (i < len) {
+		switch(str[i]){
+		case ')':
+			if (s.empty() || s.top() != '(') {
+				return false;
+			}
+			s.pop();
+			break;
+		case '}':
+			if (s.empty() || s.top() != '{') {
+				return false;
+			}
+			s.pop();
+			break;
+		case ']':
+			if (s.empty() || s.top() != '[') {
+				return false;
+			}
+			s.pop();
+			break;
+		default:
+			s.push(str[i]);
+		}
+		i++;
+	}
+	return s.empty();
+}
+
