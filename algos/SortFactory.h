@@ -5,6 +5,28 @@
 
 using namespace std;
 
+struct TreeNode {
+	int val;
+	TreeNode* left;
+	TreeNode* right;
+
+	TreeNode(int value, TreeNode* l, TreeNode* r) {
+		val = value;
+		left = l;
+		right = r;
+	}
+};
+
+
+typedef void (*TreeNodeHandler) (TreeNode*);
+
+class TreeNodeMethods {
+public:
+	static void preorderTraversalRec(TreeNode* root, TreeNodeHandler handler) {
+
+	}
+};
+
 class SortFactory
 {
 public:

@@ -205,30 +205,6 @@ int main(int argc, char* argv[])
 		cout << "=========================" << endl;
 	}
 
-	//int iarr_a[] = {3, 5, 5, 45, 6, 654, 4, 1000,65, 65, 6456, 54, 5};
-	//Util::PrintIntArray(iarr_a, 13, "Bubble Before");
-	//SortFactory::BubbleSort(iarr_a, 13);
-	//Util::PrintIntArray(iarr_a, 13, "After");
-
-	//std::string testStr = "{}[](){()}{()}";
-	//std::cout << "IsValidString(" << testStr << ")" << std::endl;
-	//std::cout << IsValidString(testStr.c_str(), testStr.size()) << std::endl;
-
-	//int hanoiNum = 50;
-	//for (int i = hanoiNum; i >=1; i--) {
-	//	A.push(i);
-	//}
-
-	//clock_t t1;
-	//
-	////PrintHanoi();
-	//t1 = clock();
-	//char A = 'A', B = 'B', C = 'C';
-	//hanoiMap[A] = 64; 	hanoiMap[B] = 0; 	hanoiMap[C] = 0;
-	//Hanoi(A, B, C, hanoiMap[A], hanoiMap);
-	//t1 = clock() - t1;
-	//double time = (float)t1 / CLOCKS_PER_SEC;
-	//std::cout << "Time: " + std::to_string(time) + ", A:" << hanoiMap['A'] << ", B:" << hanoiMap['B'] << ", C:" << hanoiMap['C'] << std::endl;
 }
 
 bool IsValidString(const char* str, int len) {
