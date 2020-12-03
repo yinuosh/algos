@@ -132,7 +132,7 @@ void KMP(const char* s, int sLen, const char* p, int pLen) {
 	}
 }
 
-void printTreeNode(TreeNode* node) {
+void printTreeNode(BinarayTreeNode* node) {
 	if (node) cout << node->val << ",";
 }
 
@@ -176,7 +176,7 @@ int main(int argc, char* argv[])
 	cout << "===========TreeNode=======================" << endl;
 
 	int btArr[] = {0, 1, 2, 3, 4, 5, 6, 7, 8};
-	TreeNode* root = TreeNodeMethods::FromHeapifyArray(btArr, 9, 0);
+	BinarayTreeNode* root = TreeNodeMethods::FromHeapifyArray(btArr, 9, 0);
 	TreeNodeMethods::BFS(root, printTreeNode);
 	cout << endl;
 	TreeNodeMethods::DFS(root, printTreeNode);

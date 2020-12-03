@@ -6,12 +6,12 @@
 
 using namespace std;
 
-struct TreeNode {
+struct BinarayTreeNode {
 	int val;
-	TreeNode* left;
-	TreeNode* right;
+	BinarayTreeNode* left;
+	BinarayTreeNode* right;
 
-	TreeNode(int value, TreeNode* l, TreeNode* r) {
+	BinarayTreeNode(int value, BinarayTreeNode* l, BinarayTreeNode* r) {
 		val = value;
 		left = l;
 		right = r;
@@ -19,15 +19,15 @@ struct TreeNode {
 };
 
 
-typedef void (*TreeNodeHandler) (TreeNode*);
+typedef void (*TreeNodeHandler) (BinarayTreeNode*);
 
 class TreeNodeMethods {
 public:
 
-	static TreeNode* FromHeapifyArray(int arr[], int len, int i) {
+	static BinarayTreeNode* FromHeapifyArray(int arr[], int len, int i) {
 		// iLeftChild = 2 * i + 1,  iRightChild = 2*i + 1
 		if (i >= len)return NULL;
-		TreeNode* node = new TreeNode(arr[i], NULL, NULL);
+		BinarayTreeNode* node = new BinarayTreeNode(arr[i], NULL, NULL);
 		if (2 * i + 1 < len) {
 			node->left = FromHeapifyArray(arr, len, 2 * i + 1);
 			if (2 * 2 + 2 < len) {
@@ -37,25 +37,25 @@ public:
 		return node;
 	}
 
-	static void ToHeapifyArray(TreeNode* root, vector<int> &arr) {
-		queue<TreeNode*> nodeQ;
+	static void ToHeapifyArray(BinarayTreeNode* root, vector<int>& arr) {
+		queue<BinarayTreeNode*> nodeQ;
 		if (root == NULL)return;
 		nodeQ.push(root);
 		while (!nodeQ.empty()) {
-			TreeNode* curNode = nodeQ.front();
+			BinarayTreeNode* curNode = nodeQ.front();
 			arr.push_back(curNode->val);
 			nodeQ.pop();
 			if (NULL != curNode->left)nodeQ.push(curNode->left);
 			if (NULL != curNode->right)nodeQ.push(curNode->right);
-		}	
+		}
 	}
 
-	static void BFS(TreeNode* root, TreeNodeHandler handler) {
-		queue<TreeNode*> nodeQ;
+	static void BFS(BinarayTreeNode* root, TreeNodeHandler handler) {
+		queue<BinarayTreeNode*> nodeQ;
 		if (root == NULL)return;
 		nodeQ.push(root);
 		while (!nodeQ.empty()) {
-			TreeNode* curNode = nodeQ.front();
+			BinarayTreeNode* curNode = nodeQ.front();
 			handler(curNode);
 			nodeQ.pop();
 			if (NULL != curNode->left)nodeQ.push(curNode->left);
@@ -63,25 +63,61 @@ public:
 		}
 	}
 
-	static void DFS(TreeNode* root, TreeNodeHandler handler) {
+	static void DFS(BinarayTreeNode* root, TreeNodeHandler handler) {
 		if (root == NULL)return;
 		handler(root);
 		DFS(root->left, handler);
 		DFS(root->right, handler);
 	}
 
-	TreeNode* lowestCommonAncestorTopDown(TreeNode* root, TreeNode* p, TreeNode* q) {
+	BinarayTreeNode* lowestCommonAncestorTopDown(BinarayTreeNode* root, BinarayTreeNode* p, BinarayTreeNode* q) {
 		if (root == NULL)return NULL;
 		if (root == p || root == q)return root;
 
-		TreeNode* lAncestor = lowestCommonAncestorTopDown(root->left, p, q);
-		TreeNode* rAncestor = lowestCommonAncestorTopDown(root->right, p, q);
+		BinarayTreeNode* lAncestor = lowestCommonAncestorTopDown(root->left, p, q);
+		BinarayTreeNode* rAncestor = lowestCommonAncestorTopDown(root->right, p, q);
 		if (lAncestor && rAncestor) return root;
 		else if (NULL != lAncestor) return lAncestor;
 		else if (NULL != rAncestor) return rAncestor;
 		else {
 			return NULL;
 		}
+	}
+};
+
+class BinarySearchTree {
+private:
+	BinarayTreeNode* mRoot = NULL;
+	static void printTreeNode(BinarayTreeNode* node) {
+		if (node) cout << node->val << ",";
+	}
+	
+	BinarayTreeNode* Exists(BinarayTreeNode* fromNode, int val) {
+		if (NULL == fromNode)return NULL;
+		if (fromNode->val == val)return fromNode;
+		else if (fromNode->val > val) return Exists(fromNode->left, val);
+		else return Exists(fromNode->right, val);
+	}
+
+public:
+	BinarySearchTree(BinarayTreeNode* root) :mRoot(root) {};
+
+	void Insert(BinarayTreeNode* node) {
+
+	}
+
+	void Delete(BinarayTreeNode* node) {
+
+	}
+
+	BinarayTreeNode* Exists(int val) {
+		return Exists(mRoot, val);
+	}
+
+	void PrintAsHeapifyArray() {
+		cout << "[";
+		TreeNodeMethods::BFS(mRoot, BinarySearchTree::printTreeNode);
+		cout << "]";
 	}
 };
 
@@ -97,17 +133,17 @@ public:
 	static void ReverseString(char* s, int from, int to);
 	static void ReverseWords(char* s) {
 		char* p = s;
-int from = 0, to = 0;
-while (*p != '\0') {
-	if (*p == ' ') {
+		int from = 0, to = 0;
+		while (*p != '\0') {
+			if (*p == ' ') {
+				if (from < to - 1) ReverseString(s, from, to - 1);
+				from = to + 1;
+			}
+			p++;
+			to++;
+		}
 		if (from < to - 1) ReverseString(s, from, to - 1);
-		from = to + 1;
-	}
-	p++;
-	to++;
-}
-if (from < to - 1) ReverseString(s, from, to - 1);
-ReverseString(s, 0, to - 1);
+		ReverseString(s, 0, to - 1);
 	}
 
 	static int StrToInt(const char* s) {
@@ -185,9 +221,9 @@ ReverseString(s, 0, to - 1);
 		}
 
 		// if s reach to end,  if p left "." or ".*", it macths with length 0, otherwise not match.
-		for (int j = pLen - 1; j >=0; j--) {
-			if ((p[j] == '*') || (j + 1 < pLen-1 && p[j + 1] == '*')) {
-				dp[sLen][j] = dp[sLen][j+1];
+		for (int j = pLen - 1; j >= 0; j--) {
+			if ((p[j] == '*') || (j + 1 < pLen - 1 && p[j + 1] == '*')) {
+				dp[sLen][j] = dp[sLen][j + 1];
 			}
 			else {
 				dp[sLen][j] = -1;
@@ -204,7 +240,7 @@ ReverseString(s, 0, to - 1);
 				bool nextIsStar = false;
 				if (j < pLen - 1 && '*' == p[j + 1]) nextIsStar = true;
 				if (s[i] == p[j] || '.' == p[j]) {
-					if (nextIsStar) {						
+					if (nextIsStar) {
 						int dpOfSkip = dp[i][j + 2]; // ignore "p[j]*"
 						int dpOfNotSkip = dp[i + 1][j + 2];
 						if (dpOfSkip >= 0)dp[i][j] = dpOfSkip;
@@ -214,14 +250,14 @@ ReverseString(s, 0, to - 1);
 						int nextDp = dp[i + 1][j + 1];
 						if (nextDp >= 0) dp[i][j] = nextDp + 1;
 					}
-				}		
+				}
 			}
 		}
 		for (int i = 0; i < sLen; i++) {
-			if(dp[i][0] >=0 )
-			std::cout << "dp[" << i << "][0]: " << dp[i][0] << std::endl;
+			if (dp[i][0] >= 0)
+				std::cout << "dp[" << i << "][0]: " << dp[i][0] << std::endl;
 		}
-		
+
 		return dp[0][0] >= 0;
 	}
 
