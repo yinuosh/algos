@@ -2,5 +2,8 @@
 #include <iostream>
 #include <string>
 #include <stdlib.h>
+#include <vector>
+#include <queue>
+#include <stack>
 //#include "SortFactory.h"
 //#include "Util.h"

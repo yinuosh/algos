@@ -2,6 +2,7 @@
 #include "Util.h"
 #include <vector>
 #include <limits>
+#include <queue>
 
 using namespace std;
 
@@ -22,8 +23,65 @@ typedef void (*TreeNodeHandler) (TreeNode*);
 
 class TreeNodeMethods {
 public:
-	static void preorderTraversalRec(TreeNode* root, TreeNodeHandler handler) {
 
+	static TreeNode* FromHeapifyArray(int arr[], int len, int i) {
+		// iLeftChild = 2 * i + 1,  iRightChild = 2*i + 1
+		if (i >= len)return NULL;
+		TreeNode* node = new TreeNode(arr[i], NULL, NULL);
+		if (2 * i + 1 < len) {
+			node->left = FromHeapifyArray(arr, len, 2 * i + 1);
+			if (2 * 2 + 2 < len) {
+				node->right = FromHeapifyArray(arr, len, 2 * i + 2);
+			}
+		}
+		return node;
+	}
+
+	static void ToHeapifyArray(TreeNode* root, vector<int> &arr) {
+		queue<TreeNode*> nodeQ;
+		if (root == NULL)return;
+		nodeQ.push(root);
+		while (!nodeQ.empty()) {
+			TreeNode* curNode = nodeQ.front();
+			arr.push_back(curNode->val);
+			nodeQ.pop();
+			if (NULL != curNode->left)nodeQ.push(curNode->left);
+			if (NULL != curNode->right)nodeQ.push(curNode->right);
+		}	
+	}
+
+	static void BFS(TreeNode* root, TreeNodeHandler handler) {
+		queue<TreeNode*> nodeQ;
+		if (root == NULL)return;
+		nodeQ.push(root);
+		while (!nodeQ.empty()) {
+			TreeNode* curNode = nodeQ.front();
+			handler(curNode);
+			nodeQ.pop();
+			if (NULL != curNode->left)nodeQ.push(curNode->left);
+			if (NULL != curNode->right)nodeQ.push(curNode->right);
+		}
+	}
+
+	static void DFS(TreeNode* root, TreeNodeHandler handler) {
+		if (root == NULL)return;
+		handler(root);
+		DFS(root->left, handler);
+		DFS(root->right, handler);
+	}
+
+	TreeNode* lowestCommonAncestorTopDown(TreeNode* root, TreeNode* p, TreeNode* q) {
+		if (root == NULL)return NULL;
+		if (root == p || root == q)return root;
+
+		TreeNode* lAncestor = lowestCommonAncestorTopDown(root->left, p, q);
+		TreeNode* rAncestor = lowestCommonAncestorTopDown(root->right, p, q);
+		if (lAncestor && rAncestor) return root;
+		else if (NULL != lAncestor) return lAncestor;
+		else if (NULL != rAncestor) return rAncestor;
+		else {
+			return NULL;
+		}
 	}
 };
 

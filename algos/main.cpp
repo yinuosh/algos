@@ -9,42 +9,6 @@ using namespace std;
 
 bool IsValidString(const char* str, int len);
 
-struct BNode {
-	int val;
-	BNode* lChild;
-	BNode* rChild;
-}; 
-
-BNode* lowestCommonAncestorTopDown(BNode *root, BNode *p, BNode *q) {
-	if (root == NULL)return NULL;
-	if (root == p || root == q)return root;
-
-	BNode* lAncestor = lowestCommonAncestorTopDown(root->lChild, p, q);
-	BNode* rAncestor = lowestCommonAncestorTopDown(root->rChild, p, q);
-	if (lAncestor && rAncestor) return root;
-	else if (NULL != lAncestor) return lAncestor;
-	else if (NULL != rAncestor) return rAncestor;
-	else {
-		return NULL;
-	}
-}
-
-BNode* ans;
-bool dfs(BNode* root, BNode* p, BNode* q) {
-	if (root == NULL)return false;
-	bool lDfs = dfs(root->lChild, p, q);
-	bool rDfs = dfs(root->rChild, p, q);
-
-	if ((lDfs && rDfs) ||
-		((root == p || root == q) && (lDfs || rDfs))) {
-		ans = root;
-	}
-
-	if (root == p || root == q || lDfs || rDfs) {
-		return true;
-	}
-	return false;
-}
 
 std::stack<int> A, B, C;
 std::map<char, int> hanoiMap;
@@ -168,6 +132,10 @@ void KMP(const char* s, int sLen, const char* p, int pLen) {
 	}
 }
 
+void printTreeNode(TreeNode* node) {
+	if (node) cout << node->val << ",";
+}
+
 int main(int argc, char* argv[])
 {
 	std::cout << "Hello world!" << std::endl;
@@ -191,7 +159,7 @@ int main(int argc, char* argv[])
 	int d = SortFactory::StrToInt(dStr); 
 	cout << d << std::endl;
 
-	char s1[] = "abcde";
+	/*char s1[] = "abcde";
 	char p1[] = "cd";
 	bool m = SortFactory::MatchRecursive(s1, p1);
 	cout << m << std::endl;
@@ -203,8 +171,19 @@ int main(int argc, char* argv[])
 		cin >> p1;
 		SortFactory::MatchDP(s1, strlen(s1), p1, strlen(p1));
 		cout << "=========================" << endl;
-	}
+	}*/
 
+	cout << "===========TreeNode=======================" << endl;
+
+	int btArr[] = {0, 1, 2, 3, 4, 5, 6, 7, 8};
+	TreeNode* root = TreeNodeMethods::FromHeapifyArray(btArr, 9, 0);
+	TreeNodeMethods::BFS(root, printTreeNode);
+	cout << endl;
+	TreeNodeMethods::DFS(root, printTreeNode);
+	cout << endl;
+	vector<int> heapifyVec;
+	TreeNodeMethods::ToHeapifyArray(root, heapifyVec);
+	Util::PrintVector(heapifyVec, "heapifyVec");
 }
 
 bool IsValidString(const char* str, int len) {

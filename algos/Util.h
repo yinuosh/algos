@@ -19,6 +19,18 @@ public:
 		std::cout << "]" << std::endl;
 	}
 
+	static void PrintVector(std::vector<int> &arr, std::string title = "")
+	{
+		std::cout << title << ":[";
+		for (int i = 0; i < arr.size(); i++) {
+			std::cout << arr[i];
+			if (i != arr.size() - 1) {
+				std::cout << ",";
+			}
+		}
+		std::cout << "]" << std::endl;
+	}
+
 	static void PrintIntArray(int array[], int start, int end, std::string title = "")
 	{
 		std::cout << title << ":[";
