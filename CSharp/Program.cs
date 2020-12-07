@@ -2,6 +2,10 @@
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Net;
+using System.Runtime.CompilerServices;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace CSharp
 {
@@ -9,6 +13,7 @@ namespace CSharp
     {
         static void Main(string[] args)
         {
+            /*
             Console.WriteLine("Hello World!");
 
             int arrLen = 10;
@@ -55,6 +60,69 @@ namespace CSharp
 
             BitArray bArr = new BitArray(intArr);
             bArr = bArr.Xor(bArr);
+            */
+
+            var inActions = new Action[100];
+            var deActions = new Action[100];
+            for(int i = 0; i < 100; i++)
+            {
+                inActions[i] = new Action(Increcment);
+                deActions[i] = new Action(Decrement);
+            }
+
+            Task inTask = Task.Run(() => Parallel.Invoke(inActions));
+
+            Task deTask = Task.Run(()=>Parallel.Invoke(deActions));
+            
+            Console.In.ReadLine();
         }
+
+        static int she = 0;
+        static object inLock = new object();
+        static object deLock = new object();
+        static Mutex mut = new Mutex(false, "my");
+
+        //[MethodImpl(MethodImplOptions.Synchronized)]
+        static void Increcment()
+        {
+            //lock (inLock)
+            //{
+            //    int org = she;
+            //    Task.Delay(10).Wait();
+            //    she++;
+
+            //}
+            mut.WaitOne();
+            int org = she;
+            int to = org + 1;
+            org = Interlocked.CompareExchange(ref she, to, org);
+            if(org+1 == to)System.Console.Out.WriteLine($"In: {org}->{to}");
+            else System.Console.Out.WriteLine($"In: failed {org}");
+            mut.ReleaseMutex();
+            Task.Delay(10).Wait();
+        }
+
+        //[MethodImpl(MethodImplOptions.Synchronized)]
+        static void Decrement()
+        {
+            //lock (inLock)
+            //{
+            //    int org = she;
+            //    Task.Delay(15).Wait();
+            //    --she;
+            //    System.Console.Out.WriteLine($"De: {org}->{she}");
+
+            //}
+
+            mut.WaitOne();
+            int org = she;
+            int to = org -1;
+            org = Interlocked.CompareExchange(ref she, to, org);
+            if (org - 1 == to) System.Console.Out.WriteLine($"De: {org}->{to}");
+            else System.Console.Out.WriteLine($"De: failed {org}");
+            mut.ReleaseMutex();
+            Task.Delay(10).Wait();
+        }
+
     }
 }

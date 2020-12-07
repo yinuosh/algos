@@ -182,13 +182,13 @@ private:
 		if (balance > 1 && node->left->val > val) { // ll
 			return ll_rotate(node);
 		}
-		if (balance > 1 && node->left->val < val) { // ll
+		if (balance > 1 && node->left->val < val) { // lr
 			return lr_rotate(node);
 		}
-		if (balance < -1 && node->left->val > val) { // ll
+		if (balance < -1 && node->right->val > val) { // rl
 			return rl_rotate(node);
 		}
-		if (balance < -1 && node->left->val < val) { // ll
+		if (balance < -1 && node->right->val < val) { // rr
 			return rr_rotate(node);
 		}
 
