@@ -140,6 +140,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="BinarayTreeNode.cpp" />
+    <ClCompile Include="LinkedNode.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="SortFactory.cpp" />
     <ClCompile Include="Util.cpp" />
@@ -147,6 +148,7 @@
   <ItemGroup>
     <ClInclude Include="BinarayTreeNode.h" />
     <ClInclude Include="Header.h" />
+    <ClInclude Include="LinkedNode.h" />
     <ClInclude Include="SortFactory.h" />
     <ClInclude Include="Util.h" />
   </ItemGroup>
