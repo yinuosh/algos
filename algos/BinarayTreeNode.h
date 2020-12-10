@@ -178,8 +178,8 @@ private:
 		}
 
 		node->height = max(height(node->left), height(node->right)) + 1;
-		int balance = node->left - node->right;
-		if (balance > 1 && node->left->val > val) { // ll
+		int balance = height(node->left) - height(node->right);
+		if (balance > 1  && node->left->val > val) { // ll
 			return ll_rotate(node);
 		}
 		if (balance > 1 && node->left->val < val) { // lr

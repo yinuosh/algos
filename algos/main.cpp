@@ -5,6 +5,7 @@
 #include <ctime>
 #include <vector>
 #include "BinarayTreeNode.h"
+#include "LinkedNode.h"
 
 using namespace std;
 
@@ -64,6 +65,48 @@ int main(int argc, char* argv[])
 	tree.PrintAsHeapifyArray();
 	tree.Delete(7);
 	tree.PrintAsHeapifyArray();
+
+	cout << "===========LinkedNode=======================" << endl;
+
+	LinkedNode* head = nullptr;
+	LinkedNodeUtil::PrintList(head);
+
+	LinkedNodeUtil::Insert(head, 1);
+	LinkedNodeUtil::PrintList(head);
+
+	LinkedNodeUtil::Insert(head, 2);
+	LinkedNodeUtil::PrintList(head);
+
+	LinkedNodeUtil::Insert(head, 3);
+	LinkedNodeUtil::PrintList(head);
+
+	LinkedNodeUtil::Insert(head, 2);
+	LinkedNodeUtil::PrintList(head);
+
+	LinkedNodeUtil::Insert(head, 3);
+	LinkedNodeUtil::PrintList(head);
+
+	LinkedNodeUtil::Insert(head, 4); LinkedNodeUtil::Insert(head, 5); LinkedNodeUtil::Insert(head, 6); LinkedNodeUtil::Insert(head, 7); LinkedNodeUtil::Insert(head, 7);
+	LinkedNodeUtil::PrintList(head);
+
+	LinkedNodeUtil::RemoveDuplication(head);
+	LinkedNodeUtil::PrintList(head);
+
+	LinkedNodeUtil::Insert(head, 7);
+	LinkedNodeUtil::Insert(head, 2);
+	LinkedNodeUtil::Insert(head, 3);
+	LinkedNodeUtil::Insert(head, 4);
+	LinkedNodeUtil::PrintList(head);
+
+	cout << "Is Cycle: " << LinkedNodeUtil::CycleExists(head);
+
+	LinkedNodeUtil::MakeCycle(head, 5);
+	LinkedNodeUtil::PrintList(head);
+
+	cout << "Is Cycle: " << LinkedNodeUtil::CycleExists(head) << endl;
+	cout << "Cycle Len: " << LinkedNodeUtil::CycleLen(head) << endl;
+	cout << "Cycle Entry Val: " << LinkedNodeUtil::GetCycleEntry(head)->val << endl;
+
 }
 
 void Hanoi(char& a, char& b, char& c, int moveNum, std::map<char, int>& count) {
