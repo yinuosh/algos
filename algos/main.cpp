@@ -95,8 +95,18 @@ int main(int argc, char* argv[])
 	LinkedNodeUtil::Insert(head, 7);
 	LinkedNodeUtil::Insert(head, 2);
 	LinkedNodeUtil::Insert(head, 3);
-	LinkedNodeUtil::Insert(head, 4);
 	LinkedNodeUtil::PrintList(head);
+
+	cout << "4 to last: " << LinkedNodeUtil::FindToLast(head, 4)->val << endl;
+
+	cout << "Mid: " << LinkedNodeUtil::FindMidNode(head)->val << endl;
+
+	LinkedNodeUtil::Insert(head, 8);
+	LinkedNodeUtil::PrintList(head);
+	cout << "Mid: " << LinkedNodeUtil::FindMidNode(head)->val << endl;
+
+
+
 
 	cout << "Is Cycle: " << LinkedNodeUtil::CycleExists(head);
 
@@ -107,6 +117,20 @@ int main(int argc, char* argv[])
 	cout << "Cycle Len: " << LinkedNodeUtil::CycleLen(head) << endl;
 	cout << "Cycle Entry Val: " << LinkedNodeUtil::GetCycleEntry(head)->val << endl;
 
+	LinkedNode* list1 = LinkedNodeUtil::CreateListFromValues(vector<int>{1,2, 3, 4, 6, 9, 10});
+	LinkedNodeUtil::PrintList(list1);
+
+	LinkedNode* list2 = LinkedNodeUtil::CreateListFromValues(vector<int>{2, 5, 6 , 7, 8, 14});
+	LinkedNodeUtil::PrintList(list2);
+
+	LinkedNode* mergedList = LinkedNodeUtil::Merge(list1, list2);
+	LinkedNodeUtil::PrintList(mergedList);
+
+	LinkedNode* reversedList = LinkedNodeUtil::Reverse(mergedList);
+	LinkedNodeUtil::PrintList(reversedList);
+
+	LinkedNode* kReversedList = LinkedNodeUtil::ReverseKGroup(reversedList, 3);
+	LinkedNodeUtil::PrintList(kReversedList);
 }
 
 void Hanoi(char& a, char& b, char& c, int moveNum, std::map<char, int>& count) {

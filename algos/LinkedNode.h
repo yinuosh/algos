@@ -1,5 +1,7 @@
 #pragma once
 #include <iostream>
+#include <vector>
+
 struct LinkedNode
 {
 	int val;
@@ -206,5 +208,141 @@ public:
 			list = list->next;
 		}
 		if (entryNode != nullptr)list->next = entryNode;
+	}
+
+	static LinkedNode* FindToLast(LinkedNode* head, int k) {
+		LinkedNode* p1 = head;
+		int cur = 0;
+		while (p1 != nullptr && cur < k) {
+			cur++;
+			p1 = p1->next;
+		}
+
+		//total nodes less than k, return null pointer.
+		if (cur != k) {
+			return nullptr;
+		}
+
+		LinkedNode* p2 = head;
+		while (p1 != nullptr) {
+			p1 = p1->next;
+			p2 = p2->next;
+		}
+
+		return p2;
+	}
+
+	static LinkedNode* FindMidNode(LinkedNode* head) {
+		if (head == nullptr)return nullptr;
+		
+		LinkedNode* fast = head->next;
+		LinkedNode* slow = head;
+
+		while (true) {
+			if (fast->next == nullptr) {				
+				break;
+			}
+			else if (fast->next->next == nullptr) {
+				slow = slow->next;
+				break;
+			}
+
+			fast = fast->next->next;
+			slow = slow->next;
+		}
+
+		return slow;
+	}
+
+	static LinkedNode* Merge(LinkedNode* list1, LinkedNode* list2) {
+		if (list1 == nullptr)return list2;
+		if (list2 == nullptr)return list1;
+
+		LinkedNode* head = new LinkedNode(-1, nullptr);
+		LinkedNode* cur = head;
+
+		while (true) {
+			if (list1 == nullptr && list2 == nullptr) {
+				break;
+			}
+			else if (list1 == nullptr) {
+				cur->next = list2;
+				break;
+			}
+			else if (list2 == nullptr) {
+				cur->next = list1;
+			}
+			else {
+				if (list1->val <= list2->val) {
+					cur->next = list1;
+					list1 = list1->next;
+				}
+				else {
+					cur->next = list2;
+					list2 = list2->next;
+				}
+				cur = cur->next;
+				cur->next = nullptr;
+			}
+		}
+
+		return head->next;
+	}
+
+	static LinkedNode* CreateListFromValues(std::vector<int> vals) {
+		if (vals.empty())return nullptr;
+		LinkedNode* head = new LinkedNode(vals[0], nullptr);
+		for (int i = 1; i < vals.size(); i++) {
+			Insert(head, vals[i]);
+		}
+		return head;
+	}
+
+	static LinkedNode* Reverse(LinkedNode* list) {
+		if (list == nullptr)return nullptr;
+
+		LinkedNode* newHead = new LinkedNode(-1, nullptr);
+
+		while (list != nullptr) {			
+			LinkedNode* node = list;
+			list = list->next;
+
+			node->next = newHead->next;
+			newHead->next = node;
+		}
+
+		return newHead->next;
+	}
+
+	static LinkedNode* ReverseKGroup(LinkedNode* list, int k) {
+		LinkedNode* head = new LinkedNode(-1, nullptr);
+		LinkedNode* groupHead = list;
+		LinkedNode* groupEnd = nullptr;		
+
+		while (groupHead != nullptr){
+			LinkedNode* groupCur = groupHead;
+			int count = 0;
+			while (groupCur != nullptr) {
+				count++;
+				if (count == k || groupCur->next == nullptr) {
+					break;
+				}
+				groupCur = groupCur->next;
+			}
+			groupEnd = groupCur;
+
+			LinkedNode* nextGroupHead = groupEnd->next;
+
+			groupEnd->next = head->next;
+			head->next = groupHead;
+
+			groupHead = nextGroupHead;
+			groupEnd = nullptr;
+		}
+
+		//debug
+		PrintList(head);
+
+		return Reverse(head->next);
 	}
 };
