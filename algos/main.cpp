@@ -6,6 +6,7 @@
 #include <vector>
 #include "BinaryTreeNode.h"
 #include "LinkedNode.h"
+#include "Algos.h"
 
 using namespace std;
 
@@ -137,6 +138,11 @@ int main(int argc, char* argv[])
 
 	LinkedNode* kReversedList = LinkedNodeUtil::ReverseKGroup(reversedList, 3);
 	LinkedNodeUtil::PrintList(kReversedList);
+
+	cout << "===========MaxSumOfSubArr=======================" << endl;
+	vector<int> arr{ 1, -2, 3, 10, -4, 7, 2, -5 };
+	int MaxSumOfSubArr_Ans = Algos::MaxSumOfSubArr(arr);
+	cout << "MaxSumOfSubArr_Ans: " << MaxSumOfSubArr_Ans << endl;
 }
 
 void Hanoi(char& a, char& b, char& c, int moveNum, std::map<char, int>& count) {

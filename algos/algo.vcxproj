@@ -139,6 +139,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Algos.cpp" />
     <ClCompile Include="BinaryTreeNode.cpp" />
     <ClCompile Include="LinkedNode.cpp" />
     <ClCompile Include="main.cpp" />
@@ -146,6 +147,7 @@
     <ClCompile Include="Util.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Algos.h" />
     <ClInclude Include="BinaryTreeNode.h" />
     <ClInclude Include="Header.h" />
     <ClInclude Include="LinkedNode.h" />
