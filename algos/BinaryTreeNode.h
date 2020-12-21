@@ -3,13 +3,13 @@
 #include "Header.h"
 
 using namespace std;
-struct BinarayTreeNode {
+struct BinaryTreeNode {
 	int val;
-	BinarayTreeNode* left;
-	BinarayTreeNode* right;
+	BinaryTreeNode* left;
+	BinaryTreeNode* right;
 	int height;
 
-	BinarayTreeNode(int value, BinarayTreeNode* l, BinarayTreeNode* r) {
+	BinaryTreeNode(int value, BinaryTreeNode* l, BinaryTreeNode* r) {
 		val = value;
 		left = l;
 		right = r;
@@ -18,15 +18,15 @@ struct BinarayTreeNode {
 };
 
 
-typedef void (*TreeNodeHandler) (BinarayTreeNode*);
+typedef void (*TreeNodeHandler) (BinaryTreeNode*);
 
 class TreeNodeMethods {
 public:
 
-	static BinarayTreeNode* FromHeapifyArray(int arr[], int len, int i) {
+	static BinaryTreeNode* FromHeapifyArray(int arr[], int len, int i) {
 		// iLeftChild = 2 * i + 1,  iRightChild = 2*i + 1
 		if (i >= len)return NULL;
-		BinarayTreeNode* node = new BinarayTreeNode(arr[i], NULL, NULL);
+		BinaryTreeNode* node = new BinaryTreeNode(arr[i], NULL, NULL);
 		if (2 * i + 1 < len) {
 			node->left = FromHeapifyArray(arr, len, 2 * i + 1);
 			if (2 * 2 + 2 < len) {
@@ -36,12 +36,12 @@ public:
 		return node;
 	}
 
-	static void ToHeapifyArray(BinarayTreeNode* root, vector<int>& arr) {
-		queue<BinarayTreeNode*> nodeQ;
+	static void ToHeapifyArray(BinaryTreeNode* root, vector<int>& arr) {
+		queue<BinaryTreeNode*> nodeQ;
 		if (root == NULL)return;
 		nodeQ.push(root);
 		while (!nodeQ.empty()) {
-			BinarayTreeNode* curNode = nodeQ.front();
+			BinaryTreeNode* curNode = nodeQ.front();
 			arr.push_back(curNode->val);
 			nodeQ.pop();
 			if (NULL != curNode->left)nodeQ.push(curNode->left);
@@ -49,12 +49,12 @@ public:
 		}
 	}
 
-	static void BFS(BinarayTreeNode* root, TreeNodeHandler handler) {
-		queue<BinarayTreeNode*> nodeQ;
+	static void BFS(BinaryTreeNode* root, TreeNodeHandler handler) {
+		queue<BinaryTreeNode*> nodeQ;
 		if (root == NULL)return;
 		nodeQ.push(root);
 		while (!nodeQ.empty()) {
-			BinarayTreeNode* curNode = nodeQ.front();
+			BinaryTreeNode* curNode = nodeQ.front();
 			handler(curNode);
 			nodeQ.pop();
 			if (NULL != curNode->left)nodeQ.push(curNode->left);
@@ -62,19 +62,38 @@ public:
 		}
 	}
 
-	static void DFS(BinarayTreeNode* root, TreeNodeHandler handler) {
+	static void DFS_stack(BinaryTreeNode* root, TreeNodeHandler handler) {
+		if (root == nullptr)return;
+		stack<BinaryTreeNode*> s;
+		s.push(root);
+		s.push(root->right);
+		s.push(root->left);
+
+		while (!s.empty()) {
+			BinaryTreeNode* node = s.top(); s.pop();
+			if (node->right != nullptr) {
+				s.push(node->right);
+			}
+			else if (node->left != nullptr) {
+				s.push(node->left);
+			}
+			handler(node);
+		}
+	}
+
+	static void DFS(BinaryTreeNode* root, TreeNodeHandler handler) {
 		if (root == NULL)return;
 		handler(root);
 		DFS(root->left, handler);
 		DFS(root->right, handler);
 	}
 
-	static BinarayTreeNode* lowestCommonAncestorTopDown(BinarayTreeNode* root, BinarayTreeNode* p, BinarayTreeNode* q) {
+	static BinaryTreeNode* lowestCommonAncestorTopDown(BinaryTreeNode* root, BinaryTreeNode* p, BinaryTreeNode* q) {
 		if (root == NULL)return NULL;
 		if (root == p || root == q)return root;
 
-		BinarayTreeNode* lAncestor = lowestCommonAncestorTopDown(root->left, p, q);
-		BinarayTreeNode* rAncestor = lowestCommonAncestorTopDown(root->right, p, q);
+		BinaryTreeNode* lAncestor = lowestCommonAncestorTopDown(root->left, p, q);
+		BinaryTreeNode* rAncestor = lowestCommonAncestorTopDown(root->right, p, q);
 		if (lAncestor && rAncestor) return root;
 		else if (NULL != lAncestor) return lAncestor;
 		else if (NULL != rAncestor) return rAncestor;
@@ -86,24 +105,24 @@ public:
 
 class BinarySearchTree {
 private:
-	BinarayTreeNode* mRoot = NULL;
-	static void printTreeNode(BinarayTreeNode* node) {
+	BinaryTreeNode* mRoot = NULL;
+	static void printTreeNode(BinaryTreeNode* node) {
 		if (node) cout << node->val << ",";
 	}
 
-	int height(BinarayTreeNode* node) {
+	int height(BinaryTreeNode* node) {
 		if (NULL == node)return 0;
 		return node->height;
 	}
 
-	BinarayTreeNode* Exists(BinarayTreeNode* fromNode, int val) {
+	BinaryTreeNode* Exists(BinaryTreeNode* fromNode, int val) {
 		if (NULL == fromNode)return NULL;
 		if (fromNode->val == val)return fromNode;
 		else if (fromNode->val > val) return Exists(fromNode->left, val);
 		else return Exists(fromNode->right, val);
 	}
 	
-	BinarayTreeNode* ll_rotate(BinarayTreeNode* node) {
+	BinaryTreeNode* ll_rotate(BinaryTreeNode* node) {
 		/*
 				A								B					
 			   /                               /  \ 
@@ -112,7 +131,7 @@ private:
 			  C
 		*/
 		if (NULL == node || NULL == node->left)return node;
-		BinarayTreeNode* left = node->left;
+		BinaryTreeNode* left = node->left;
 		node->left = left->right;
 		left->right = node;
 
@@ -122,7 +141,7 @@ private:
 		return left;
 	}
 
-	BinarayTreeNode* rr_rotate(BinarayTreeNode* node) {
+	BinaryTreeNode* rr_rotate(BinaryTreeNode* node) {
 
 		/*
 				A								   B
@@ -132,15 +151,17 @@ private:
 			        C
 		*/
 		if (NULL == node || NULL == node->right)return node;
-		BinarayTreeNode* right = node->right;
+		BinaryTreeNode* right = node->right;
 		node->right = right->left;
 		right->left = node;
 
 		node->height = max(height(node->left), height(node->right)) + 1;
 		right->height = max(height(right->left), height(right->right)) + 1;
+
+		return right;
 	}
 
-	BinarayTreeNode* lr_rotate(BinarayTreeNode* node) {
+	BinaryTreeNode* lr_rotate(BinaryTreeNode* node) {
 		/*
 				A								C
 			   /                               /  \
@@ -153,7 +174,7 @@ private:
 		return ll_rotate(node);
 	}
 
-	BinarayTreeNode* rl_rotate(BinarayTreeNode* node) {
+	BinaryTreeNode* rl_rotate(BinaryTreeNode* node) {
 		/*
 				A								C
 			      \                               /  \
@@ -166,36 +187,38 @@ private:
 		return rr_rotate(node);
 	}
 
-	BinarayTreeNode* Insert(BinarayTreeNode* node, int val) {
+	void Insert(BinaryTreeNode* &node, int val) {
 		//if equals, drop
-		if (node == NULL)node = new BinarayTreeNode(val, NULL, NULL);
-		if (node->val == val)return node;;
+		if (node == NULL) {
+			node = new BinaryTreeNode(val, NULL, NULL);
+			return;
+		}
+		if (node->val == val)return;
+
 		if (node->val > val) {
-			node->left = Insert(node->left, val);
+			Insert(node->left, val);
 		}
 		else {
-			node->right = Insert(node->right, val);
+			Insert(node->right, val);
 		}
 
 		node->height = max(height(node->left), height(node->right)) + 1;
 		int balance = height(node->left) - height(node->right);
 		if (balance > 1  && node->left->val > val) { // ll
-			return ll_rotate(node);
+			node = ll_rotate(node);
 		}
 		if (balance > 1 && node->left->val < val) { // lr
-			return lr_rotate(node);
+			node = lr_rotate(node);
 		}
 		if (balance < -1 && node->right->val > val) { // rl
-			return rl_rotate(node);
+			node = rl_rotate(node);
 		}
 		if (balance < -1 && node->right->val < val) { // rr
-			return rr_rotate(node);
+			node = rr_rotate(node);
 		}
-
-		return node;
 	}
 
-	BinarayTreeNode* BalanceTree(BinarayTreeNode* node) {
+	BinaryTreeNode* BalanceTree(BinaryTreeNode* node) {
 		int balance = height(node->left) - height(node->right);
 		if (balance > 1) {
 			if (height(node->left->left) > height(node->left->right))return ll_rotate(node);
@@ -209,10 +232,10 @@ private:
 	}
 
 	//return newRoot
-	BinarayTreeNode* Delete(BinarayTreeNode* root, int val, BinarayTreeNode* parent, bool left) {
-		if (root == NULL)return NULL;
+	void Delete(BinaryTreeNode* &root, int val, BinaryTreeNode* parent) {
+		if (root == NULL)return;
 		if (root->val == val) {
-			BinarayTreeNode* newRoot = NULL;
+			BinaryTreeNode* newRoot = NULL;
 			if (NULL == root->left && NULL == root->right) {
 				newRoot = NULL;
 			}
@@ -223,39 +246,39 @@ private:
 				newRoot = root->left;
 			}
 			else {
-				BinarayTreeNode* newRootParent = root;
+				BinaryTreeNode* newRootParent = root;
 				newRoot = root->left;
 				while (newRoot->right != NULL) {
 					newRootParent = newRoot;
 					newRoot = newRoot->right;
 				}
-				if (newRoot != root->left)newRootParent->right = NULL;
+
+				if(newRoot != root->left)newRoot->left = root->left;
+				newRoot->right = root->right;
+				newRootParent->right = NULL;
 			}
-			if (parent != NULL) {
-				if (left)parent->left = newRoot;
-				else parent->right = newRoot;
+			/*if (parent != NULL) {
 				parent->height = max(height(parent->left), height(parent->right)) + 1;
-			}
+			}*/
+
 			delete root;
-			root = NULL;
+			root = newRoot;
 
-			parent = BalanceTree(parent);
-
-			return newRoot;
+			//parent = BalanceTree(parent);
 		}
-		else if (root->val >= val) return Delete(root->left, val, root, true);
-		else return Delete(root->right, val, root, false);
+		else if (root->val >= val) {
+			Delete(root->left, val, root);
+		}
+		else {
+			Delete(root->right, val, root);
+		}
 	}
 
 public:
 	BinarySearchTree() :mRoot(NULL) {};
-	BinarySearchTree(BinarayTreeNode* root) :mRoot(root) {};
+	BinarySearchTree(BinaryTreeNode* root) :mRoot(root) {};
 
-	bool Insert(int val) {
-		if (mRoot == NULL){
-			mRoot = new BinarayTreeNode(val, NULL, NULL);
-			return true;
-		}
+	void Insert(int val) {
 		return Insert(mRoot, val);
 	}
 
@@ -264,11 +287,10 @@ public:
 		//if only left or right child, delete and move up its only child
 		//else move the the max node up to the target
 
-		BinarayTreeNode* replacement = Delete(mRoot, val, NULL, false);
-		if (NULL == mRoot)mRoot = replacement;
+		Delete(mRoot, val, NULL);
 	}
 
-	BinarayTreeNode* Exists(int val) {
+	BinaryTreeNode* Exists(int val) {
 		return Exists(mRoot, val);
 	}
 
@@ -276,5 +298,46 @@ public:
 		cout << "[";
 		TreeNodeMethods::BFS(mRoot, BinarySearchTree::printTreeNode);
 		cout << "]";
+	}
+
+	void To2DLinkedNode(BinaryTreeNode*& left, BinaryTreeNode*& right) {
+		ConvertTo2DLinkedNode(mRoot, left, right);
+	}
+
+	static void ConvertTo2DLinkedNode(BinaryTreeNode* root, BinaryTreeNode*& left, BinaryTreeNode*& right) {
+		if (root == nullptr) {
+			left = nullptr;
+			right = nullptr;
+			return;
+		}
+
+		BinaryTreeNode* l_left = nullptr, * l_right = nullptr;
+		ConvertTo2DLinkedNode(root->left, l_left, l_right);
+
+		BinaryTreeNode* r_left = nullptr, * r_right = nullptr;
+		ConvertTo2DLinkedNode(root->right, r_left, r_right);
+
+		if (l_left == nullptr) left = root;
+		else left = l_left;
+
+		if (r_left == nullptr) right = root;
+		else right = r_right;
+
+		if (left != root) { l_right->right = root; root->left = l_right; }
+		if (right != root) { root->right = r_left; r_left->left = root; }
+	}
+
+	static void PrintAs2DLinkedNode(BinaryTreeNode* root) {
+		BinaryTreeNode* cur = root;
+		cout << "[";
+		while (cur != nullptr) {
+			cout << cur->val;
+			if (cur->right != nullptr) {
+				cout << ",";
+				cur = cur->right;
+			}
+			else break;
+		}
+		cout << "]" << endl;
 	}
 };

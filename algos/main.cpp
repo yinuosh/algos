@@ -4,7 +4,7 @@
 #include <map>
 #include <ctime>
 #include <vector>
-#include "BinarayTreeNode.h"
+#include "BinaryTreeNode.h"
 #include "LinkedNode.h"
 
 using namespace std;
@@ -14,7 +14,7 @@ bool IsValidString(const char* str, int len);
 
 std::stack<int> A, B, C;
 std::map<char, int> hanoiMap;
-void printTreeNode(BinarayTreeNode* node);
+void printTreeNode(BinaryTreeNode* node);
 
 int main(int argc, char* argv[])
 {
@@ -42,7 +42,7 @@ int main(int argc, char* argv[])
 	cout << "===========TreeNode=======================" << endl;
 
 	int btArr[] = { 0, 1, 2, 3, 4, 5, 6, 7, 8 };
-	BinarayTreeNode* root = TreeNodeMethods::FromHeapifyArray(btArr, 9, 0);
+	BinaryTreeNode* root = TreeNodeMethods::FromHeapifyArray(btArr, 9, 0);
 	TreeNodeMethods::BFS(root, printTreeNode);
 	cout << endl;
 	TreeNodeMethods::DFS(root, printTreeNode);
@@ -50,6 +50,8 @@ int main(int argc, char* argv[])
 	vector<int> heapifyVec;
 	TreeNodeMethods::ToHeapifyArray(root, heapifyVec);
 	Util::PrintVector(heapifyVec, "heapifyVec");
+
+
 
 	cout << "===========TreeNode=======================" << endl;
 
@@ -65,6 +67,10 @@ int main(int argc, char* argv[])
 	tree.PrintAsHeapifyArray();
 	tree.Delete(7);
 	tree.PrintAsHeapifyArray();
+
+	BinaryTreeNode* left, * right;
+	tree.To2DLinkedNode(left, right);
+	BinarySearchTree::PrintAs2DLinkedNode(left);
 
 	cout << "===========LinkedNode=======================" << endl;
 
@@ -157,7 +163,7 @@ void Hanoi(char& a, char& b, char& c, int moveNum, std::map<char, int>& count) {
 
 
 
-void printTreeNode(BinarayTreeNode* node) {
+void printTreeNode(BinaryTreeNode* node) {
 	if (node) cout << node->val << ",";
 }
 
