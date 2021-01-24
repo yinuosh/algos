@@ -33,6 +33,9 @@
     <ClCompile Include="Algos.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ShortestPath.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SortFactory.h">
@@ -51,6 +54,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Algos.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ShortestPath.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
